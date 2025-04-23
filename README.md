@@ -1,4 +1,4 @@
-# CRM Advocacia
+# LexManager
 
 Sistema de CRM para escritórios de advocacia desenvolvido com Flask, SQLite e integração com a API do Datajud.
 
