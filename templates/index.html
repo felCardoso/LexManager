@@ -1,0 +1,328 @@
+{% extends "base.html" %} {% block title %}Dashboard - LexManager{% endblock %}
+{% block content %}
+<div class="row g-4">
+  <div class="col-md-6 col-lg-3">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <h6 class="text-muted mb-2">Total de Clientes</h6>
+            <h2 class="mb-0">{{ clientes_total }}</h2>
+          </div>
+          <div class="bg-primary bg-opacity-10 p-3 rounded">
+            <i class="bi bi-people-fill text-primary fs-4"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6 col-lg-3">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <h6 class="text-muted mb-2">Processos Ativos</h6>
+            <h2 class="mb-0">{{ processos_ativos }}</h2>
+          </div>
+          <div class="bg-success bg-opacity-10 p-3 rounded">
+            <i class="bi bi-folder-check text-success fs-4"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6 col-lg-3">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <h6 class="text-muted mb-2">Audiências Hoje</h6>
+            <h2 class="mb-0">{{ audiencias_hoje }}</h2>
+          </div>
+          <div class="bg-warning bg-opacity-10 p-3 rounded">
+            <i class="bi bi-calendar-check text-warning fs-4"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6 col-lg-3">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <h6 class="text-muted mb-2">Novos Clientes</h6>
+            <h2 class="mb-0">{{ novos_clientes }}</h2>
+          </div>
+          <div class="bg-info bg-opacity-10 p-3 rounded">
+            <i class="bi bi-person-plus text-info fs-4"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4 mt-4">
+  <div class="col-lg-6">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-header bg-white border-0">
+        <div class="d-flex justify-content-between align-items-center">
+          <h5 class="mb-0">Últimos Processos</h5>
+          <a href="/adicionar_processo" class="btn btn-sm btn-outline-primary">
+            <i class="bi bi-plus-lg me-1"></i>Novo
+          </a>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Número</th>
+                <th>Cliente</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for processo in ultimos_processos %}
+              <tr>
+                <td>{{ processo.numero_processo }}</td>
+                <td>{{ processo.cliente.nome }}</td>
+                <td>
+                  <span class="badge bg-success">{{ processo.status }}</span>
+                </td>
+                <td>
+                  <button
+                    class="btn btn-sm btn-outline-primary"
+                    data-bs-toggle="modal"
+                    data-bs-target="#processoModal{{ processo.id }}"
+                  >
+                    <i class="bi bi-eye"></i>
+                  </button>
+                </td>
+              </tr>
+
+              <!-- Modal de Visualização do Processo -->
+              <div
+                class="modal fade"
+                id="processoModal{{ processo.id }}"
+                tabindex="-1"
+              >
+                <div class="modal-dialog modal-lg">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title">Detalhes do Processo</h5>
+                      <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                      ></button>
+                    </div>
+                    <div class="modal-body">
+                      <div class="row">
+                        <div class="col-md-6">
+                          <h6>Informações Básicas</h6>
+                          <ul class="list-group list-group-flush">
+                            <li class="list-group-item">
+                              <strong>Número:</strong> {{
+                              processo.numero_processo }}
+                            </li>
+                            <li class="list-group-item">
+                              <strong>Cliente:</strong> {{ processo.cliente.nome
+                              }}
+                            </li>
+                            <li class="list-group-item">
+                              <strong>Status:</strong>
+                              <span class="badge bg-success"
+                                >{{ processo.status }}</span
+                              >
+                            </li>
+                            <li class="list-group-item">
+                              <strong>Data de Abertura:</strong>
+                              {{ processo.data_abertura.strftime('%d/%m/%Y') }}
+                            </li>
+                          </ul>
+                        </div>
+                        <div class="col-md-6">
+                          <h6>Detalhes do Processo</h6>
+                          <ul class="list-group list-group-flush">
+                            <li class="list-group-item">
+                              <strong>Tribunal:</strong> {{ processo.tribunal or
+                              'Não informado' }}
+                            </li>
+                            <li class="list-group-item">
+                              <strong>Vara:</strong> {{ processo.vara or 'Não
+                              informado' }}
+                            </li>
+                            <li class="list-group-item">
+                              <strong>Classe:</strong> {{ processo.classe or
+                              'Não informado' }}
+                            </li>
+                            <li class="list-group-item">
+                              <strong>Assunto:</strong> {{ processo.assunto or
+                              'Não informado' }}
+                            </li>
+                            <li class="list-group-item">
+                              <strong>Valor da Causa:</strong>
+                              R$ {{ "%.2f"|format(processo.valor_causa) if
+                              processo.valor_causa else 'Não informado' }}
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                      <div class="row mt-3">
+                        <div class="col-12">
+                          <h6>Descrição</h6>
+                          <div class="card">
+                            <div class="card-body">
+                              {{ processo.descricao or 'Nenhuma descrição
+                              disponível' }}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <a
+                        href="{{ url_for('editar_processo', id=processo.id) }}"
+                        class="btn btn-primary"
+                      >
+                        <i class="bi bi-pencil me-1"></i>Editar
+                      </a>
+                      <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal"
+                      >
+                        Fechar
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-header bg-white border-0">
+        <div class="d-flex justify-content-between align-items-center">
+          <h5 class="mb-0">Próximas Audiências</h5>
+          <a href="/adicionar_audiencia" class="btn btn-sm btn-outline-primary">
+            <i class="bi bi-plus-lg me-1"></i>Nova
+          </a>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Data</th>
+                <th>Processo</th>
+                <th>Local</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for audiencia in proximas_audiencias %}
+              <tr>
+                <td>{{ audiencia.data.strftime('%d/%m/%Y %H:%M') }}</td>
+                <td>{{ audiencia.processo.numero_processo }}</td>
+                <td>{{ audiencia.local }}</td>
+                <td>
+                  <button
+                    class="btn btn-sm btn-outline-primary"
+                    data-bs-toggle="modal"
+                    data-bs-target="#audienciaModal{{ audiencia.id }}"
+                  >
+                    <i class="bi bi-eye"></i>
+                  </button>
+                </td>
+              </tr>
+
+              <!-- Modal de Visualização da Audiência -->
+              <div
+                class="modal fade"
+                id="audienciaModal{{ audiencia.id }}"
+                tabindex="-1"
+              >
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title">Detalhes da Audiência</h5>
+                      <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                      ></button>
+                    </div>
+                    <div class="modal-body">
+                      <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                          <strong>Processo:</strong> {{
+                          audiencia.processo.numero_processo }}
+                        </li>
+                        <li class="list-group-item">
+                          <strong>Cliente:</strong> {{
+                          audiencia.processo.cliente.nome }}
+                        </li>
+                        <li class="list-group-item">
+                          <strong>Data e Hora:</strong> {{
+                          audiencia.data.strftime('%d/%m/%Y %H:%M') }}
+                        </li>
+                        <li class="list-group-item">
+                          <strong>Local:</strong> {{ audiencia.local }}
+                        </li>
+                        <li class="list-group-item">
+                          <strong>Tipo:</strong> {{ audiencia.tipo }}
+                        </li>
+                        <li class="list-group-item">
+                          <strong>Status:</strong>
+                          <span
+                            class="badge {% if audiencia.status == 'Confirmada' %}bg-success{% else %}bg-warning{% endif %}"
+                          >
+                            {{ audiencia.status }}
+                          </span>
+                        </li>
+                        {% if audiencia.observacoes %}
+                        <li class="list-group-item">
+                          <strong>Observações:</strong>
+                          <div class="mt-2">{{ audiencia.observacoes }}</div>
+                        </li>
+                        {% endif %}
+                      </ul>
+                    </div>
+                    <div class="modal-footer">
+                      <a
+                        href="{{ url_for('editar_audiencia', id=audiencia.id) }}"
+                        class="btn btn-primary"
+                      >
+                        <i class="bi bi-pencil me-1"></i>Editar
+                      </a>
+                      <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal"
+                      >
+                        Fechar
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

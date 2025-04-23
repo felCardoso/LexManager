@@ -1,0 +1,81 @@
+{% extends "base.html" %} {% block title %}Editar Cliente - LexManager{% endblock
+%} {% block content %}
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white border-0">
+          <div class="d-flex justify-content-between align-items-center">
+            <h4 class="mb-0">Editar Cliente</h4>
+            <a href="{{ url_for('clientes') }}" class="btn btn-outline-secondary btn-sm">
+              <i class="bi bi-arrow-left me-1"></i>Voltar
+            </a>
+          </div>
+        </div>
+        <div class="card-body">
+          <form method="POST">
+            <div class="mb-3">
+              <label for="nome" class="form-label">Nome</label>
+              <input
+                type="text"
+                class="form-control"
+                id="nome"
+                name="nome"
+                value="{{ cliente.nome }}"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="cpf" class="form-label">CPF</label>
+              <input
+                type="text"
+                class="form-control"
+                id="cpf"
+                name="cpf"
+                value="{{ cliente.cpf }}"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="email" class="form-label">Email</label>
+              <input
+                type="email"
+                class="form-control"
+                id="email"
+                name="email"
+                value="{{ cliente.email }}"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="telefone" class="form-label">Telefone</label>
+              <input
+                type="text"
+                class="form-control"
+                id="telefone"
+                name="telefone"
+                value="{{ cliente.telefone }}"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="endereco" class="form-label">Endereço</label>
+              <textarea
+                class="form-control"
+                id="endereco"
+                name="endereco"
+                rows="3"
+              >{{ cliente.endereco }}</textarea>
+            </div>
+            <div class="d-grid gap-2">
+              <button type="submit" class="btn btn-primary">
+                <i class="bi bi-save me-2"></i>Salvar Alterações
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %} 

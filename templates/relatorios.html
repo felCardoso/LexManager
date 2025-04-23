@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+
+{% block title %}Relatórios - LexManager{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Relatórios</h1>
+
+    <div class="row">
+        <!-- Relatório de Processos -->
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Relatório de Processos</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{{ url_for('gerar_relatorio_processos') }}">
+                        <div class="mb-3">
+                            <label for="data_inicio" class="form-label">Data Inicial</label>
+                            <input type="date" class="form-control" id="data_inicio" name="data_inicio" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="data_fim" class="form-label">Data Final</label>
+                            <input type="date" class="form-control" id="data_fim" name="data_fim" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="status" class="form-label">Status</label>
+                            <select class="form-select" id="status" name="status">
+                                <option value="">Todos</option>
+                                <option value="ativo">Ativo</option>
+                                <option value="arquivado">Arquivado</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Gerar Relatório</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Relatório de Honorários -->
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Relatório de Honorários</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{{ url_for('gerar_relatorio_honorarios') }}">
+                        <div class="mb-3">
+                            <label for="mes" class="form-label">Mês</label>
+                            <input type="month" class="form-control" id="mes" name="mes" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="cliente" class="form-label">Cliente</label>
+                            <select class="form-select" id="cliente" name="cliente">
+                                <option value="">Todos os Clientes</option>
+                                {% for cliente in clientes %}
+                                <option value="{{ cliente.id }}">{{ cliente.nome }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Gerar Relatório</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Relatório de Audiências -->
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Relatório de Audiências</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{{ url_for('gerar_relatorio_audiencias') }}">
+                        <div class="mb-3">
+                            <label for="data_inicio" class="form-label">Data Inicial</label>
+                            <input type="date" class="form-control" id="data_inicio" name="data_inicio" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="data_fim" class="form-label">Data Final</label>
+                            <input type="date" class="form-control" id="data_fim" name="data_fim" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="status" class="form-label">Status</label>
+                            <select class="form-select" id="status" name="status">
+                                <option value="">Todos</option>
+                                <option value="confirmada">Confirmada</option>
+                                <option value="pendente">Pendente</option>
+                                <option value="cancelada">Cancelada</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Gerar Relatório</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Relatório de Documentos -->
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Relatório de Documentos</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{{ url_for('gerar_relatorio_documentos') }}">
+                        <div class="mb-3">
+                            <label for="tipo" class="form-label">Tipo de Documento</label>
+                            <select class="form-select" id="tipo" name="tipo">
+                                <option value="">Todos</option>
+                                <option value="peticao">Petição</option>
+                                <option value="contrato">Contrato</option>
+                                <option value="sentenca">Sentença</option>
+                                <option value="outro">Outro</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="processo" class="form-label">Processo</label>
+                            <select class="form-select" id="processo" name="processo">
+                                <option value="">Todos os Processos</option>
+                                {% for processo in processos %}
+                                <option value="{{ processo.id }}">{{ processo.numero }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Gerar Relatório</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

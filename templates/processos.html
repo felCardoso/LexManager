@@ -1,0 +1,208 @@
+{% extends "base.html" %} {% block title %}Processos - LexManager{% endblock
+%} {% block content %}
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Processos</h1>
+    <div>
+      <a href="{{ url_for('pesquisar_processos') }}" class="btn btn-info me-2">
+        <i class="bi bi-search me-1"></i>Pesquisar no Datajud
+      </a>
+      <a href="{{ url_for('adicionar_processo') }}" class="btn btn-primary">
+        <i class="bi bi-plus-circle me-1"></i>Adicionar Processo
+      </a>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th>Número</th>
+              <th>Cliente</th>
+              <th>Tipo</th>
+              <th>Status</th>
+              <th>Data de Abertura</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for processo in processos %}
+            <tr>
+              <td>{{ processo.numero }}</td>
+              <td>{{ processo.cliente.nome }}</td>
+              <td>{{ processo.tipo }}</td>
+              <td>
+                <span
+                  class="badge bg-{{ 'success' if processo.status == 'Ativo' else 'danger' }}"
+                >
+                  {{ processo.status }}
+                </span>
+              </td>
+              <td>{{ processo.data_abertura.strftime('%d/%m/%Y') }}</td>
+              <td>
+                <a
+                  href="{{ url_for('editar_processo', id=processo.id) }}"
+                  class="btn btn-sm btn-warning"
+                >
+                  <i class="bi bi-pencil"></i>
+                </a>
+                <a
+                  href="{{ url_for('honorarios', processo_id=processo.id) }}"
+                  class="btn btn-sm btn-success"
+                >
+                  <i class="bi bi-cash"></i>
+                </a>
+                <button
+                  type="button"
+                  class="btn btn-sm btn-danger"
+                  data-bs-toggle="modal"
+                  data-bs-target="#excluirProcessoModal{{ processo.id }}"
+                >
+                  <i class="bi bi-trash"></i>
+                </button>
+              </td>
+            </tr>
+
+            <!-- Modal de Confirmação de Exclusão -->
+            <div
+              class="modal fade"
+              id="excluirProcessoModal{{ processo.id }}"
+              tabindex="-1"
+            >
+              <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">Confirmar Exclusão do Processo</h5>
+                    <button
+                      type="button"
+                      class="btn-close"
+                      data-bs-dismiss="modal"
+                    ></button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="alert alert-danger">
+                      <h6 class="alert-heading">Atenção!</h6>
+                      <p class="mb-0">
+                        Esta ação irá excluir permanentemente o processo e todos
+                        os dados relacionados. Esta ação não pode ser desfeita!
+                      </p>
+                    </div>
+
+                    <h6 class="mt-3">Processo a ser excluído:</h6>
+                    <ul class="list-group mb-3">
+                      <li class="list-group-item">
+                        <strong>Número:</strong> {{ processo.numero_processo
+                        }}<br />
+                        <strong>Cliente:</strong> {{ processo.cliente.nome }}<br />
+                        <strong>Status:</strong> {{ processo.status }}
+                      </li>
+                    </ul>
+
+                    {% if processo.audiencias %}
+                    <h6>
+                      Audiências a serem excluídas ({{
+                      processo.audiencias|length }}):
+                    </h6>
+                    <ul class="list-group mb-3">
+                      {% for audiencia in processo.audiencias %}
+                      <li class="list-group-item">
+                        <strong>Data:</strong> {{
+                        audiencia.data.strftime('%d/%m/%Y %H:%M') }}<br />
+                        <strong>Local:</strong> {{ audiencia.local }}<br />
+                        <strong>Tipo:</strong> {{ audiencia.tipo }}
+                      </li>
+                      {% endfor %}
+                    </ul>
+                    {% endif %} {% if processo.documentos %}
+                    <h6>
+                      Documentos a serem excluídos ({{
+                      processo.documentos|length }}):
+                    </h6>
+                    <ul class="list-group mb-3">
+                      {% for documento in processo.documentos %}
+                      <li class="list-group-item">
+                        <strong>Nome:</strong> {{ documento.nome }}<br />
+                        <strong>Tipo:</strong> {{ documento.tipo }}
+                      </li>
+                      {% endfor %}
+                    </ul>
+                    {% endif %} {% if processo.honorarios %}
+                    <h6>
+                      Honorários a serem excluídos ({{
+                      processo.honorarios|length }}):
+                    </h6>
+                    <ul class="list-group mb-3">
+                      {% for honorario in processo.honorarios %}
+                      <li class="list-group-item">
+                        <strong>Data:</strong> {{
+                        honorario.data.strftime('%d/%m/%Y') }}<br />
+                        <strong>Valor:</strong> R$ {{
+                        "%.2f"|format(honorario.valor) }}<br />
+                        <strong>Status:</strong> {{ honorario.status }}
+                      </li>
+                      {% endfor %}
+                    </ul>
+                    {% endif %}
+
+                    <div class="form-check mb-3">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        id="confirmarExclusao{{ processo.id }}"
+                        required
+                      />
+                      <label
+                        class="form-check-label"
+                        for="confirmarExclusao{{ processo.id }}"
+                      >
+                        Eu entendo que esta ação é irreversível e desejo excluir
+                        todos os dados listados acima
+                      </label>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button
+                      type="button"
+                      class="btn btn-secondary"
+                      data-bs-dismiss="modal"
+                    >
+                      Cancelar
+                    </button>
+                    <form
+                      action="{{ url_for('excluir_processo', id=processo.id) }}"
+                      method="POST"
+                      id="formExcluir{{ processo.id }}"
+                    >
+                      <button
+                        type="submit"
+                        class="btn btn-danger"
+                        disabled
+                        id="btnExcluir{{ processo.id }}"
+                      >
+                        <i class="bi bi-trash"></i> Excluir Tudo
+                      </button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <script>
+              document
+                .getElementById("confirmarExclusao{{ processo.id }}")
+                .addEventListener("change", function () {
+                  document.getElementById(
+                    "btnExcluir{{ processo.id }}"
+                  ).disabled = !this.checked;
+                });
+            </script>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

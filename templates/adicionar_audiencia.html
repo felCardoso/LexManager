@@ -1,0 +1,97 @@
+{% extends "base.html" %} {% block title %}Adicionar Audiência - LexManager{%
+endblock %} {% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <div class="card border-0 shadow-sm">
+      <div class="card-header bg-white border-0">
+        <div class="d-flex justify-content-between align-items-center">
+          <h4 class="mb-0">Adicionar Audiência</h4>
+          <a
+            href="{{ url_for('audiencias') }}"
+            class="btn btn-outline-secondary btn-sm"
+          >
+            <i class="bi bi-arrow-left me-1"></i>Voltar
+          </a>
+        </div>
+      </div>
+      <div class="card-body">
+        <form method="POST">
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="processo_id" class="form-label">Processo</label>
+              <select
+                class="form-select"
+                id="processo_id"
+                name="processo_id"
+                required
+              >
+                <option value="">Selecione um processo</option>
+                {% for processo in processos %}
+                <option value="{{ processo.id }}">
+                  {{ processo.numero_processo }} - {{ processo.cliente.nome }}
+                </option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label for="data" class="form-label">Data e Hora</label>
+              <input
+                type="datetime-local"
+                class="form-control"
+                id="data"
+                name="data"
+                required
+              />
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="tipo" class="form-label">Tipo de Audiência</label>
+              <select class="form-select" id="tipo" name="tipo" required>
+                <option value="Inicial">Inicial</option>
+                <option value="Instrução">Instrução</option>
+                <option value="Julgamento">Julgamento</option>
+                <option value="Conciliação">Conciliação</option>
+                <option value="Outros">Outros</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label for="status" class="form-label">Status</label>
+              <select class="form-select" id="status" name="status" required>
+                <option value="Agendada">Agendada</option>
+                <option value="Realizada">Realizada</option>
+                <option value="Cancelada">Cancelada</option>
+                <option value="Adiada">Adiada</option>
+              </select>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="local" class="form-label">Local</label>
+            <input
+              type="text"
+              class="form-control"
+              id="local"
+              name="local"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="observacoes" class="form-label">Observações</label>
+            <textarea
+              class="form-control"
+              id="observacoes"
+              name="observacoes"
+              rows="3"
+            ></textarea>
+          </div>
+          <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-primary">
+              <i class="bi bi-save me-2"></i>Salvar Audiência
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

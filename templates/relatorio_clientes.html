@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Relatório de Clientes{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Relatório de Clientes</h2>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>CPF/CNPJ</th>
+                    <th>Email</th>
+                    <th>Telefone</th>
+                    <th>Processos Ativos</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for cliente in clientes %}
+                <tr>
+                    <td>{{ cliente.nome }}</td>
+                    <td>{{ cliente.cpf_cnpj }}</td>
+                    <td>{{ cliente.email }}</td>
+                    <td>{{ cliente.telefone }}</td>
+                    <td>{{ cliente.processos_ativos }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="mt-3">
+        <a href="{{ url_for('relatorios') }}" class="btn btn-secondary">Voltar</a>
+        <button onclick="window.print()" class="btn btn-primary">Imprimir</button>
+    </div>
+</div>
+{% endblock %} 

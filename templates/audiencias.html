@@ -1,0 +1,158 @@
+{% extends "base.html" %} {% block title %}Audiências - LexManager{% endblock %}
+{% block content %}
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Audiências</h1>
+    <a href="{{ url_for('adicionar_audiencia') }}" class="btn btn-primary">
+      <i class="bi bi-plus-circle"></i> Adicionar Audiência
+    </a>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th>Data/Hora</th>
+              <th>Processo</th>
+              <th>Cliente</th>
+              <th>Tipo</th>
+              <th>Local</th>
+              <th>Status</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for audiencia in audiencias %}
+            <tr>
+              <td>{{ audiencia.data.strftime('%d/%m/%Y %H:%M') }}</td>
+              <td>{{ audiencia.processo.numero_processo }}</td>
+              <td>{{ audiencia.processo.cliente.nome }}</td>
+              <td>{{ audiencia.tipo }}</td>
+              <td>{{ audiencia.local }}</td>
+              <td>
+                <span
+                  class="badge bg-{{ 'success' if audiencia.status == 'Confirmada' else 'warning' if audiencia.status == 'Pendente' else 'danger' }}"
+                >
+                  {{ audiencia.status }}
+                </span>
+              </td>
+              <td>
+                <a
+                  href="{{ url_for('editar_audiencia', id=audiencia.id) }}"
+                  class="btn btn-sm btn-warning"
+                >
+                  <i class="bi bi-pencil"></i>
+                </a>
+                <button
+                  type="button"
+                  class="btn btn-sm btn-danger"
+                  data-bs-toggle="modal"
+                  data-bs-target="#excluirAudienciaModal{{ audiencia.id }}"
+                >
+                  <i class="bi bi-trash"></i>
+                </button>
+              </td>
+            </tr>
+
+            <!-- Modal de Confirmação de Exclusão -->
+            <div
+              class="modal fade"
+              id="excluirAudienciaModal{{ audiencia.id }}"
+              tabindex="-1"
+            >
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">Confirmar Exclusão da Audiência</h5>
+                    <button
+                      type="button"
+                      class="btn-close"
+                      data-bs-dismiss="modal"
+                    ></button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="alert alert-danger">
+                      <h6 class="alert-heading">Atenção!</h6>
+                      <p class="mb-0">
+                        Esta ação irá excluir permanentemente a audiência. Esta
+                        ação não pode ser desfeita!
+                      </p>
+                    </div>
+
+                    <h6 class="mt-3">Audiência a ser excluída:</h6>
+                    <ul class="list-group mb-3">
+                      <li class="list-group-item">
+                        <strong>Processo:</strong> {{
+                        audiencia.processo.numero_processo }}<br />
+                        <strong>Cliente:</strong> {{
+                        audiencia.processo.cliente.nome }}<br />
+                        <strong>Data:</strong> {{
+                        audiencia.data.strftime('%d/%m/%Y %H:%M') }}<br />
+                        <strong>Local:</strong> {{ audiencia.local }}<br />
+                        <strong>Tipo:</strong> {{ audiencia.tipo }}<br />
+                        <strong>Status:</strong> {{ audiencia.status }}
+                      </li>
+                    </ul>
+
+                    <div class="form-check mb-3">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        id="confirmarExclusao{{ audiencia.id }}"
+                        required
+                      />
+                      <label
+                        class="form-check-label"
+                        for="confirmarExclusao{{ audiencia.id }}"
+                      >
+                        Eu entendo que esta ação é irreversível e desejo excluir
+                        esta audiência
+                      </label>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button
+                      type="button"
+                      class="btn btn-secondary"
+                      data-bs-dismiss="modal"
+                    >
+                      Cancelar
+                    </button>
+                    <form
+                      action="{{ url_for('excluir_audiencia', id=audiencia.id) }}"
+                      method="POST"
+                      id="formExcluir{{ audiencia.id }}"
+                    >
+                      <button
+                        type="submit"
+                        class="btn btn-danger"
+                        disabled
+                        id="btnExcluir{{ audiencia.id }}"
+                      >
+                        <i class="bi bi-trash"></i> Excluir
+                      </button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <script>
+              document
+                .getElementById("confirmarExclusao{{ audiencia.id }}")
+                .addEventListener("change", function () {
+                  document.getElementById(
+                    "btnExcluir{{ audiencia.id }}"
+                  ).disabled = !this.checked;
+                });
+            </script>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,96 @@
+{% extends "base.html" %} {% block title %}Editar Audiência - LexManager{% endblock
+%} {% block content %}
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white border-0">
+          <div class="d-flex justify-content-between align-items-center">
+            <h4 class="mb-0">Editar Audiência</h4>
+            <a href="{{ url_for('audiencias') }}" class="btn btn-outline-secondary btn-sm">
+              <i class="bi bi-arrow-left me-1"></i>Voltar
+            </a>
+          </div>
+        </div>
+        <div class="card-body">
+          <form method="POST">
+            <div class="mb-3">
+              <label for="processo_id" class="form-label">Processo</label>
+              <select class="form-select" id="processo_id" name="processo_id" required>
+                {% for processo in processos %}
+                <option value="{{ processo.id }}" {% if processo.id == audiencia.processo_id %}selected{% endif %}>
+                  {{ processo.numero_processo }} - {{ processo.cliente.nome }}
+                </option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="data" class="form-label">Data e Hora</label>
+                <input
+                  type="datetime-local"
+                  class="form-control"
+                  id="data"
+                  name="data"
+                  value="{{ audiencia.data.strftime('%Y-%m-%dT%H:%M') }}"
+                  required
+                />
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="local" class="form-label">Local</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="local"
+                  name="local"
+                  value="{{ audiencia.local }}"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="tipo" class="form-label">Tipo</label>
+                <select class="form-select" id="tipo" name="tipo" required>
+                  <option value="Audiência Inicial" {% if audiencia.tipo == 'Audiência Inicial' %}selected{% endif %}>Audiência Inicial</option>
+                  <option value="Audiência de Instrução" {% if audiencia.tipo == 'Audiência de Instrução' %}selected{% endif %}>Audiência de Instrução</option>
+                  <option value="Audiência de Conciliação" {% if audiencia.tipo == 'Audiência de Conciliação' %}selected{% endif %}>Audiência de Conciliação</option>
+                  <option value="Audiência de Julgamento" {% if audiencia.tipo == 'Audiência de Julgamento' %}selected{% endif %}>Audiência de Julgamento</option>
+                  <option value="Outra" {% if audiencia.tipo == 'Outra' %}selected{% endif %}>Outra</option>
+                </select>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="status" class="form-label">Status</label>
+                <select class="form-select" id="status" name="status" required>
+                  <option value="Pendente" {% if audiencia.status == 'Pendente' %}selected{% endif %}>Pendente</option>
+                  <option value="Confirmada" {% if audiencia.status == 'Confirmada' %}selected{% endif %}>Confirmada</option>
+                  <option value="Cancelada" {% if audiencia.status == 'Cancelada' %}selected{% endif %}>Cancelada</option>
+                  <option value="Realizada" {% if audiencia.status == 'Realizada' %}selected{% endif %}>Realizada</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="observacoes" class="form-label">Observações</label>
+              <textarea
+                class="form-control"
+                id="observacoes"
+                name="observacoes"
+                rows="3"
+              >{{ audiencia.observacoes }}</textarea>
+            </div>
+
+            <div class="d-grid gap-2">
+              <button type="submit" class="btn btn-primary">
+                <i class="bi bi-save me-2"></i>Salvar Alterações
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %} 

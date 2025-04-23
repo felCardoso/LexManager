@@ -1,0 +1,94 @@
+{% extends "base.html" %} {% block title %}Perfil - LexManager{% endblock %} {%
+block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <div class="card border-0 shadow-sm">
+      <div class="card-header bg-white border-0">
+        <h4 class="mb-0">Perfil do Usuário</h4>
+      </div>
+      <div class="card-body">
+        <form method="POST">
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="nome" class="form-label">Nome Completo</label>
+              <input
+                type="text"
+                class="form-control"
+                id="nome"
+                name="nome"
+                value="{{ current_user.nome }}"
+                required
+              />
+            </div>
+            <div class="col-md-6">
+              <label for="oab" class="form-label">OAB</label>
+              <input
+                type="text"
+                class="form-control"
+                id="oab"
+                name="oab"
+                value="{{ current_user.oab }}"
+                required
+              />
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="username" class="form-label">Nome de Usuário</label>
+              <input
+                type="text"
+                class="form-control"
+                id="username"
+                name="username"
+                value="{{ current_user.username }}"
+                required
+              />
+            </div>
+            <div class="col-md-6">
+              <label for="email" class="form-label">E-mail</label>
+              <input
+                type="email"
+                class="form-control"
+                id="email"
+                name="email"
+                value="{{ current_user.email }}"
+                required
+              />
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="password" class="form-label">Nova Senha</label>
+              <input
+                type="password"
+                class="form-control"
+                id="password"
+                name="password"
+              />
+              <small class="text-muted"
+                >Deixe em branco para manter a senha atual</small
+              >
+            </div>
+            <div class="col-md-6">
+              <label for="confirm_password" class="form-label"
+                >Confirmar Nova Senha</label
+              >
+              <input
+                type="password"
+                class="form-control"
+                id="confirm_password"
+                name="confirm_password"
+              />
+            </div>
+          </div>
+          <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-primary">
+              <i class="bi bi-save me-2"></i>Salvar Alterações
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

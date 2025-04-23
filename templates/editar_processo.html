@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% block title %}Editar Processo - LexManager{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white border-0">
+          <div class="d-flex justify-content-between align-items-center">
+            <h4 class="mb-0">Editar Processo</h4>
+            <a href="{{ url_for('processos') }}" class="btn btn-outline-secondary btn-sm">
+              <i class="bi bi-arrow-left me-1"></i>Voltar
+            </a>
+          </div>
+        </div>
+        <div class="card-body">
+          <form method="POST">
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="numero_processo" class="form-label">Número do Processo</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="numero_processo"
+                  name="numero_processo"
+                  value="{{ processo.numero_processo }}"
+                  required
+                />
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="cliente_id" class="form-label">Cliente</label>
+                <select class="form-select" id="cliente_id" name="cliente_id" required>
+                  {% for cliente in clientes %}
+                  <option value="{{ cliente.id }}" {% if cliente.id == processo.cliente_id %}selected{% endif %}>
+                    {{ cliente.nome }}
+                  </option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="tribunal" class="form-label">Tribunal</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="tribunal"
+                  name="tribunal"
+                  value="{{ processo.tribunal }}"
+                />
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="vara" class="form-label">Vara</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="vara"
+                  name="vara"
+                  value="{{ processo.vara }}"
+                />
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="classe" class="form-label">Classe</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="classe"
+                  name="classe"
+                  value="{{ processo.classe }}"
+                />
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="assunto" class="form-label">Assunto</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="assunto"
+                  name="assunto"
+                  value="{{ processo.assunto }}"
+                />
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="valor_causa" class="form-label">Valor da Causa</label>
+                <div class="input-group">
+                  <span class="input-group-text">R$</span>
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="valor_causa"
+                    name="valor_causa"
+                    value="{{ processo.valor_causa }}"
+                    step="0.01"
+                  />
+                </div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="status" class="form-label">Status</label>
+                <select class="form-select" id="status" name="status" required>
+                  <option value="Ativo" {% if processo.status == 'Ativo' %}selected{% endif %}>Ativo</option>
+                  <option value="Suspenso" {% if processo.status == 'Suspenso' %}selected{% endif %}>Suspenso</option>
+                  <option value="Arquivado" {% if processo.status == 'Arquivado' %}selected{% endif %}>Arquivado</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="descricao" class="form-label">Descrição</label>
+              <textarea
+                class="form-control"
+                id="descricao"
+                name="descricao"
+                rows="3"
+              >{{ processo.descricao }}</textarea>
+            </div>
+
+            <div class="d-grid gap-2">
+              <button type="submit" class="btn btn-primary">
+                <i class="bi bi-save me-2"></i>Salvar Alterações
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %} 

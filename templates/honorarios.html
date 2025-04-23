@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+
+{% block title %}Honorários - LexManager{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-0">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h4 class="mb-0">Honorários - Processo {{ processo.numero_processo }}</h4>
+                        <a href="{{ url_for('processos') }}" class="btn btn-outline-secondary btn-sm">
+                            <i class="bi bi-arrow-left me-1"></i>Voltar
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <!-- Resumo dos Honorários -->
+                    <div class="row mb-4">
+                        <div class="col-md-4">
+                            <div class="card bg-light">
+                                <div class="card-body text-center">
+                                    <h5 class="card-title">Total Pendente</h5>
+                                    <h3 class="text-warning">R$ {{ "%.2f"|format(total_pendente) }}</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card bg-light">
+                                <div class="card-body text-center">
+                                    <h5 class="card-title">Total Pago</h5>
+                                    <h3 class="text-success">R$ {{ "%.2f"|format(total_pago) }}</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card bg-light">
+                                <div class="card-body text-center">
+                                    <h5 class="card-title">Total Geral</h5>
+                                    <h3 class="text-primary">R$ {{ "%.2f"|format(total_geral) }}</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Formulário de Cálculo -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="mb-0">Calcular Honorários</h5>
+                        </div>
+                        <div class="card-body">
+                            <form method="POST">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="tipo_calculo" class="form-label">Tipo de Cálculo</label>
+                                        <select class="form-select" id="tipo_calculo" name="tipo_calculo" required>
+                                            <option value="percentual">Percentual sobre o Valor da Causa</option>
+                                            <option value="valor_fixo">Valor Fixo</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="parcelas" class="form-label">Número de Parcelas</label>
+                                        <input type="number" class="form-control" id="parcelas" name="parcelas" value="1" min="1" required>
+                                    </div>
+                                </div>
+
+                                <div class="row" id="percentual_fields">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="valor_base" class="form-label">Valor da Causa</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">R$</span>
+                                            <input type="number" class="form-control" id="valor_base" name="valor_base" step="0.01">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="percentual" class="form-label">Percentual (%)</label>
+                                        <div class="input-group">
+                                            <input type="number" class="form-control" id="percentual" name="percentual" step="0.01">
+                                            <span class="input-group-text">%</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row" id="valor_fixo_fields" style="display: none;">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="valor_fixo" class="form-label">Valor Fixo</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">R$</span>
+                                            <input type="number" class="form-control" id="valor_fixo" name="valor_fixo" step="0.01">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="data_vencimento" class="form-label">Data do Primeiro Vencimento</label>
+                                        <input type="date" class="form-control" id="data_vencimento" name="data_vencimento" required>
+                                    </div>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-calculator me-2"></i>Calcular e Criar Parcelas
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Lista de Honorários -->
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Parcela</th>
+                                    <th>Valor</th>
+                                    <th>Data</th>
+                                    <th>Status</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for honorario in honorarios %}
+                                <tr>
+                                    <td>{{ honorario.parcela }}</td>
+                                    <td>R$ {{ "%.2f"|format(honorario.valor) }}</td>
+                                    <td>{{ honorario.data.strftime('%d/%m/%Y') }}</td>
+                                    <td>
+                                        <span class="badge {% if honorario.status == 'Pago' %}bg-success{% else %}bg-warning{% endif %}">
+                                            {{ honorario.status }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <form method="POST" action="{{ url_for('atualizar_honorario', id=honorario.id) }}" class="d-inline">
+                                                <select name="status" class="form-select form-select-sm" onchange="this.form.submit()">
+                                                    <option value="Pendente" {% if honorario.status == 'Pendente' %}selected{% endif %}>Pendente</option>
+                                                    <option value="Pago" {% if honorario.status == 'Pago' %}selected{% endif %}>Pago</option>
+                                                </select>
+                                            </form>
+                                            <form method="POST" action="{{ url_for('excluir_honorario', id=honorario.id) }}" class="d-inline" > <!-- onsubmit="return confirm('Tem certeza que deseja excluir este honorário?');" -->
+                                                <button type="submit" class="btn btn-link p-0" style="font-size: 0.8rem; color: #666;">
+                                                    <i class="bi bi-x"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block scripts %}
+<script>
+    document.getElementById('tipo_calculo').addEventListener('change', function() {
+        const percentualFields = document.getElementById('percentual_fields');
+        const valorFixoFields = document.getElementById('valor_fixo_fields');
+        
+        if (this.value === 'percentual') {
+            percentualFields.style.display = 'flex';
+            valorFixoFields.style.display = 'none';
+            document.getElementById('valor_base').required = true;
+            document.getElementById('percentual').required = true;
+            document.getElementById('valor_fixo').required = false;
+        } else {
+            percentualFields.style.display = 'none';
+            valorFixoFields.style.display = 'flex';
+            document.getElementById('valor_base').required = false;
+            document.getElementById('percentual').required = false;
+            document.getElementById('valor_fixo').required = true;
+        }
+    });
+</script>
+{% endblock %}
+{% endblock %} 

@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Relatório de Honorários{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Relatório de Honorários</h2>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Cliente</th>
+                    <th>Processo</th>
+                    <th>Data</th>
+                    <th>Valor</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for honorario in honorarios %}
+                <tr>
+                    <td>{{ honorario.processo.cliente.nome }}</td>
+                    <td>{{ honorario.processo.numero }}</td>
+                    <td>{{ honorario.data.strftime('%d/%m/%Y') }}</td>
+                    <td>R$ {{ "%.2f"|format(honorario.valor) }}</td>
+                    <td>{{ honorario.status }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="mt-3">
+        <a href="{{ url_for('relatorios') }}" class="btn btn-secondary">Voltar</a>
+        <button onclick="window.print()" class="btn btn-primary">Imprimir</button>
+    </div>
+</div>
+{% endblock %} 
