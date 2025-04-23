@@ -68,18 +68,17 @@ python app.py
 crm-advocacia/
 ├── app.py              # Aplicação principal
 ├── requirements.txt    # Dependências
-├── .env               # Variáveis de ambiente
-├── templates/         # Templates HTML
+├── .env                # Variáveis de ambiente
+├── templates/          # Templates HTML
 │   ├── base.html
 │   ├── index.html
 │   └── login.html
-└── README.md          # Documentação
+└── README.md           # Documentação
 ```
 
 ## Segurança
 
 - Use uma chave secreta forte no arquivo `.env`
-- Nunca compartilhe suas credenciais da API do Datajud
 - Mantenha o sistema atualizado
 
 ## Contribuição
